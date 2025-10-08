@@ -4,7 +4,14 @@
  */
 
 import express from 'express';
-import { getComponent, ComponentRequest } from '../services/component-service.js';
+import { 
+  getComponent, 
+  ComponentRequest,
+  listComponents,
+  ListComponentsRequest,
+  getComponentDetails,
+  ComponentDetailsRequest
+} from '../services/component-service.js';
 
 const router = express.Router();
 
@@ -191,6 +198,123 @@ router.get('/component/:componentName', async (req, res) => {
     res.status(500).json({ 
       error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * POST /api/component/list
+ * List components based on search query
+ * Used by MCP list_components tool
+ */
+router.post('/component/list', async (req, res) => {
+  try {
+    console.log('📥 Received list components request:', {
+      body: req.body,
+      timestamp: new Date().toISOString()
+    });
+    
+    const { query, category, limit } = req.body;
+
+    // query is now optional - if not provided, returns all components
+    // Create list request
+    const listRequest: ListComponentsRequest = {
+      query: query || "all",  // Default to "all" if no query provided
+      category: category || undefined,
+      limit: limit || undefined  // No default limit - return all matching components
+    };
+
+    // Get component list
+    const results = await listComponents(listRequest);
+
+    console.log('📤 Sending list response:', {
+      query,
+      count: results.length,
+      timestamp: new Date().toISOString()
+    });
+
+    res.json({
+      results,
+      metadata: {
+        query,
+        category: category || 'all',
+        count: results.length,
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+      }
+    });
+  } catch (error) {
+    console.error('❌ List components error:', error);
+    
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
+    res.status(500).json({ 
+      error: errorMessage,
+      timestamp: new Date().toISOString(),
+      version: '1.0.0'
+    });
+  }
+});
+
+/**
+ * POST /api/component/details
+ * Get detailed component information for installation
+ * Used by MCP get_component_details tool
+ */
+router.post('/component/details', async (req, res) => {
+  try {
+    console.log('📥 Received component details request:', {
+      body: req.body,
+      timestamp: new Date().toISOString()
+    });
+    
+    const {
+      componentName,
+      absolutePathToCurrentFile,
+      absolutePathToProjectDirectory
+    } = req.body;
+
+    // Validate required fields
+    if (!componentName) {
+      return res.status(400).json({
+        error: 'Missing required field: componentName',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // Create details request
+    const detailsRequest: ComponentDetailsRequest = {
+      componentName,
+      absolutePathToCurrentFile: absolutePathToCurrentFile || '',
+      absolutePathToProjectDirectory: absolutePathToProjectDirectory || ''
+    };
+
+    // Get component details
+    const result = await getComponentDetails(detailsRequest);
+
+    console.log('📤 Sending details response:', {
+      componentName,
+      resultLength: result.length,
+      timestamp: new Date().toISOString()
+    });
+
+    res.json({
+      result,
+      metadata: {
+        componentName,
+        timestamp: new Date().toISOString(),
+        version: '1.0.0'
+      }
+    });
+  } catch (error) {
+    console.error('❌ Component details error:', error);
+    
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
+    res.status(500).json({ 
+      error: errorMessage,
+      timestamp: new Date().toISOString(),
+      version: '1.0.0'
     });
   }
 });

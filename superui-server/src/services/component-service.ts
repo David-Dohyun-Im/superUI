@@ -3,7 +3,14 @@
  * Handles component requests and generates installation instructions
  */
 
-import { findComponent, ComponentInfo } from "../utils/component-finder.js";
+import { 
+  findComponent, 
+  ComponentInfo, 
+  searchComponentsRanked,
+  getComponentByName,
+  getAllComponents,
+  getComponentsByCategory
+} from "../utils/component-finder.js";
 
 export interface ComponentRequest {
   message: string;
@@ -224,4 +231,220 @@ function determineInstallPath(currentFile: string, projectPath: string): string 
  */
 function capitalizeFirst(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * List components based on search query
+ * Returns brief component information for candidate selection
+ * @param request - List request with query, category filter, and limit
+ * @returns Array of component summaries
+ */
+export interface ListComponentsRequest {
+  query: string;
+  category?: string;
+  limit?: number;
+}
+
+export interface ComponentSummary {
+  name: string;
+  displayName: string;
+  description: string;
+  category: string;
+  library?: string;
+}
+
+export async function listComponents(
+  request: ListComponentsRequest
+): Promise<ComponentSummary[]> {
+  const { query, category, limit } = request;
+  
+  console.log(`🔍 Listing components for query: "${query}"${category ? ` in category: ${category}` : ''}`);
+  
+  let components: ComponentInfo[];
+  
+  // If query is "all" or empty, return all components
+  if (!query || query.toLowerCase() === "all") {
+    console.log(`📋 Returning all components`);
+    components = category 
+      ? getComponentsByCategory(category)
+      : getAllComponents();
+    
+    // Apply limit if provided
+    if (limit && limit > 0) {
+      components = components.slice(0, limit);
+    }
+  } else {
+    // Use ranked search for specific queries
+    components = searchComponentsRanked(query, category, limit || 100);
+  }
+  
+  console.log(`✅ Found ${components.length} matching components`);
+  
+  // Return simplified summaries
+  return components.map(component => ({
+    name: component.componentName,
+    displayName: component.displayName,
+    description: component.description,
+    category: component.category,
+    library: component.library
+  }));
+}
+
+/**
+ * Get detailed component information for installation
+ * @param request - Component details request
+ * @returns Formatted installation guide
+ */
+export interface ComponentDetailsRequest {
+  componentName: string;
+  absolutePathToCurrentFile: string;
+  absolutePathToProjectDirectory: string;
+}
+
+export async function getComponentDetails(
+  request: ComponentDetailsRequest
+): Promise<string> {
+  const { componentName, absolutePathToCurrentFile, absolutePathToProjectDirectory } = request;
+  
+  console.log(`📦 Getting details for component: ${componentName}`);
+  
+  // Get component by exact name
+  const componentInfo = getComponentByName(componentName);
+  
+  if (!componentInfo) {
+    return generateNotFoundResponse(componentName, absolutePathToProjectDirectory);
+  }
+  
+  // Generate installation path
+  const installPath = determineInstallPath(absolutePathToCurrentFile, absolutePathToProjectDirectory);
+  
+  // Generate detailed response
+  const result = generateDetailedComponentResponse(
+    componentInfo,
+    installPath,
+    absolutePathToProjectDirectory
+  );
+  
+  console.log(`✅ Component details generated: ${componentInfo.displayName}`);
+  return result;
+}
+
+/**
+ * Generate detailed component response with installation guide
+ * @param componentInfo - Component information
+ * @param installPath - Installation path
+ * @param projectPath - Project root path
+ * @returns Formatted detailed response
+ */
+function generateDetailedComponentResponse(
+  componentInfo: ComponentInfo,
+  installPath: string,
+  projectPath: string
+): string {
+  // Determine installation command
+  const installCommand = componentInfo.installCommand || 
+    `npx shadcn@latest add ${componentInfo.componentName}`;
+  
+  // Build documentation link
+  const docUrl = componentInfo.documentationUrl || 
+    `https://ui.shadcn.com/docs/components/${componentInfo.componentName}`;
+  
+  let response = `
+# ${componentInfo.displayName}
+
+${componentInfo.description}
+
+## 📦 Installation
+
+\`\`\`bash
+cd ${projectPath}
+${installCommand}
+\`\`\`
+
+## 📁 Installation Path
+
+The component will be installed to:
+\`${installPath}\`
+
+## 🔧 Import Statement
+
+\`\`\`tsx
+${componentInfo.importStatement}
+\`\`\`
+
+## 💡 Basic Usage
+
+\`\`\`tsx
+${componentInfo.usage}
+\`\`\`
+
+## 🏷️ Component Details
+
+- **Name**: ${componentInfo.displayName}
+- **Package**: ${componentInfo.packageName}
+- **Category**: ${capitalizeFirst(componentInfo.category)}
+- **Tags**: ${componentInfo.tags.join(", ")}
+`;
+
+  // Add library info if it's an extended component
+  if (componentInfo.library && componentInfo.library !== "shadcn-ui") {
+    response += `- **Library**: ${componentInfo.library}\n`;
+  }
+
+  response += `
+## 📚 Additional Resources
+
+- [Documentation](${docUrl})
+`;
+
+  // Add specific documentation for extended libraries
+  if (componentInfo.library === "shadcn-ai") {
+    response += `- [AI Components Collection](https://www.shadcn.io/ai)\n`;
+  } else if (componentInfo.library === "shadcn-button") {
+    response += `- [Button Components Collection](https://www.shadcn.io/button)\n`;
+  } else if (componentInfo.library === "shadcn-text") {
+    response += `- [Text Components Collection](https://www.shadcn.io/text)\n`;
+  } else {
+    response += `- [shadcn/ui Documentation](https://ui.shadcn.com/docs/components)
+- [Radix UI Documentation](https://www.radix-ui.com/primitives)
+`;
+  }
+
+  response += `
+## 🚀 Next Steps
+
+1. Run the installation command above
+2. Import the component in your file
+3. Use the component as shown in the usage example
+4. Customize the component with additional props and styling
+
+## 💡 Pro Tips
+
+- Check the component's props in the documentation for customization options
+- Use Tailwind CSS classes for styling
+`;
+
+  // Add category-specific tips
+  if (componentInfo.category === "ai") {
+    response += `- These AI components are designed for chat and conversational interfaces
+- Consider streaming responses for better UX
+- Integrate with AI SDKs like Vercel AI SDK or LangChain
+`;
+  } else if (componentInfo.category === "advanced-button") {
+    response += `- These buttons include advanced animations and effects
+- Test performance on lower-end devices
+- Consider using reduced-motion queries for accessibility
+`;
+  } else if (componentInfo.category === "text") {
+    response += `- These text components include animations that may need performance tuning
+- Test readability and accessibility with screen readers
+- Consider animation timing based on text length
+`;
+  } else {
+    response += `- Consider using the component's variants (e.g., \`variant="outline"\` for buttons)
+- Test the component in different states (loading, disabled, error, etc.)
+`;
+  }
+
+  return response;
 }
