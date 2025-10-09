@@ -1,5 +1,5 @@
 /**
- * Template conversation flow for SuperUI API Server
+ * Landing page conversation flow for SuperUI API Server
  * Handles the interactive conversation to gather user requirements
  */
 
@@ -10,14 +10,14 @@ export interface ConversationState {
   nextQuestion?: string;
 }
 
-export interface TemplateAnswers {
+export interface LandingAnswers {
   purpose: string;
   targetAudience: string;
   desiredAction: string;
   style: string;
 }
 
-export interface TemplateSection {
+export interface LandingSection {
   name: string;
   priority: number;
   tailarkComponent: string;
@@ -25,7 +25,7 @@ export interface TemplateSection {
 }
 
 /**
- * Conversation questions for template generation
+ * Conversation questions for landing page generation
  */
 export const CONVERSATION_QUESTIONS = {
   1: {
@@ -75,15 +75,15 @@ export const CONVERSATION_QUESTIONS = {
 };
 
 /**
- * Process conversation step and return next question or template
+ * Process conversation step and return next question or landing page
  * @param conversationState - Current conversation state
  * @param userAnswer - User's answer to current question
- * @returns Updated conversation state or template result
+ * @returns Updated conversation state or landing page result
  */
 export function processConversationStep(
   conversationState: ConversationState,
   userAnswer: string
-): { type: 'question' | 'template', data: ConversationState | string } {
+): { type: 'question' | 'landing', data: ConversationState | string } {
   
   const { currentStep, answers } = conversationState;
   
@@ -95,15 +95,15 @@ export function processConversationStep(
   
   // Check if we have all answers
   if (currentStep >= 4) {
-  // Generate template based on all answers
-  const templateAnswers: TemplateAnswers = {
+  // Generate landing page based on all answers
+  const landingAnswers: LandingAnswers = {
     purpose: answers.purpose || '',
     targetAudience: answers.targetAudience || '',
     desiredAction: answers.desiredAction || '',
     style: answers.style || ''
   };
-  const template = generateTemplateFromAnswers(templateAnswers);
-    return { type: 'template', data: template };
+  const landing = generateLandingFromAnswers(landingAnswers);
+    return { type: 'landing', data: landing };
   }
   
   // Move to next question
@@ -122,12 +122,12 @@ export function processConversationStep(
 }
 
 /**
- * Generate template based on user answers
+ * Generate landing page based on user answers
  * @param answers - User's answers to all questions
- * @returns Generated template structure
+ * @returns Generated landing page structure
  */
-function generateTemplateFromAnswers(answers: TemplateAnswers): string {
-  const sections = selectSectionsForTemplate(answers);
+function generateLandingFromAnswers(answers: LandingAnswers): string {
+  const sections = selectSectionsForLanding(answers);
   
   return `
 # 🎨 Custom Landing Page Template
@@ -204,8 +204,8 @@ Each section can be customized with:
  * @param answers - User's answers
  * @returns Array of recommended sections
  */
-function selectSectionsForTemplate(answers: TemplateAnswers): TemplateSection[] {
-  const sections: TemplateSection[] = [];
+function selectSectionsForLanding(answers: LandingAnswers): LandingSection[] {
+  const sections: LandingSection[] = [];
   
   // Always include hero section
   sections.push({
@@ -306,3 +306,4 @@ export function getNextQuestion(currentStep: number): string | null {
   const question = CONVERSATION_QUESTIONS[currentStep as keyof typeof CONVERSATION_QUESTIONS];
   return question ? question.question : null;
 }
+

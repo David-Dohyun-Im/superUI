@@ -10,7 +10,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import componentRoutes from './routes/component.js';
-import templateRoutes from './routes/template.js';
+import landingRoutes from './routes/landing.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -99,7 +99,7 @@ app.get('/', (req, res) => {
 
 // API routes
 app.use('/api', componentRoutes);
-app.use('/api', templateRoutes);
+app.use('/api', landingRoutes);
 
 // 404 handler
 app.use('*', (req, res) => {

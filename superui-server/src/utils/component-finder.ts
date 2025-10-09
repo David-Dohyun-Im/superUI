@@ -497,24 +497,26 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     componentName: "ai-actions",
     displayName: "AI Actions",
     description: "Interactive AI action buttons for React chat interfaces with tooltips and shadcn/ui styling",
-    importStatement: `import { AIActions } from "@/components/ai/actions"`,
-    usage: `<AIActions actions={[{ label: "Copy", onClick: handleCopy }]} />`,
+    importStatement: `import { Actions, Action } from "@/components/ai/actions"`,
+    usage: `<Actions><Action label="Copy">Copy</Action></Actions>`,
     packageName: "shadcn-ai",
     category: "ai",
     tags: ["ai", "chat", "actions", "buttons", "interactive"],
     library: "shadcn-ai",
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json",
     documentationUrl: "https://www.shadcn.io/ai/actions"
   },
   "ai-branch": {
     componentName: "ai-branch",
     displayName: "AI Branch",
     description: "Branch between AI response variations like ChatGPT for exploring multiple answers",
-    importStatement: `import { AIBranch } from "@/components/ai/branch"`,
-    usage: `<AIBranch responses={responses} onSelect={handleSelect} />`,
+    importStatement: `import { Branch } from "@/components/ai/branch"`,
+    usage: `<Branch responses={responses} onSelect={handleSelect} />`,
     packageName: "shadcn-ai",
     category: "ai",
     tags: ["ai", "branch", "variations", "chatgpt", "responses"],
     library: "shadcn-ai",
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json",
     documentationUrl: "https://www.shadcn.io/ai/branch"
   },
   "ai-code-block": {
@@ -528,7 +530,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "code", "syntax", "highlight", "copy"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/code-block"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-conversation": {
     componentName: "ai-conversation",
     displayName: "AI Conversation",
@@ -540,7 +543,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "chat", "conversation", "scroll", "streaming"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/conversation"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-image": {
     componentName: "ai-image",
     displayName: "AI Image",
@@ -552,7 +556,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "image", "dalle", "midjourney", "generated"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/image"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-inline-citation": {
     componentName: "ai-inline-citation",
     displayName: "AI Inline Citation",
@@ -564,7 +569,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "citation", "perplexity", "sources", "references"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/inline-citation"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-loader": {
     componentName: "ai-loader",
     displayName: "AI Loader",
@@ -576,7 +582,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "loader", "streaming", "thinking", "animation"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/loader"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-message": {
     componentName: "ai-message",
     displayName: "AI Message",
@@ -588,7 +595,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "message", "chat", "avatar", "conversation"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/message"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-prompt-input": {
     componentName: "ai-prompt-input",
     displayName: "AI Prompt Input",
@@ -600,7 +608,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "input", "prompt", "chatgpt", "textarea"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/prompt-input"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-reasoning": {
     componentName: "ai-reasoning",
     displayName: "AI Reasoning",
@@ -612,7 +621,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "reasoning", "thinking", "claude", "process"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/reasoning"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-response": {
     componentName: "ai-response",
     displayName: "AI Response",
@@ -624,7 +634,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "response", "markdown", "streaming", "render"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/response"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-sources": {
     componentName: "ai-sources",
     displayName: "AI Sources",
@@ -636,7 +647,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "sources", "citations", "perplexity", "references"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/sources"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-suggestion": {
     componentName: "ai-suggestion",
     displayName: "AI Suggestion",
@@ -648,7 +660,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "suggestions", "chips", "chatgpt", "prompts"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/suggestion"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-task": {
     componentName: "ai-task",
     displayName: "AI Task",
@@ -660,7 +673,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "task", "progress", "claude", "artifacts"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/task"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-tool": {
     componentName: "ai-tool",
     displayName: "AI Tool",
@@ -672,7 +686,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "tool", "function", "openai", "calls"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/tool"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
   "ai-web-preview": {
     componentName: "ai-web-preview",
     displayName: "AI Web Preview",
@@ -684,7 +699,8 @@ const COMPONENT_LIBRARY: Record<string, ComponentInfo> = {
     tags: ["ai", "preview", "website", "v0", "iframe"],
     library: "shadcn-ai",
     documentationUrl: "https://www.shadcn.io/ai/web-preview"
-  },
+  ,
+    installCommand: "npx shadcn@latest add https://www.shadcn.io/registry/ai.json"},
 
   // Advanced Button Components (shadcn.io)
   "glow-button": {

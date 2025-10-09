@@ -2,7 +2,7 @@ import { z } from "zod";
 import { BaseTool } from "../utils/base-tool.js";
 import { httpClient } from "../utils/http-client.js";
 
-const TOOL_NAME = "get_template";
+const TOOL_NAME = "build_landing";
 const TOOL_DESCRIPTION = `
 "Use this tool when the user wants to create a landing page template through conversation.
 This tool will guide the user through a series of questions to understand their needs and generate a customized template.
@@ -27,7 +27,7 @@ Example usage:
 - "Create a landing page for my mobile app"
 `;
 
-interface GetTemplateResponse {
+interface BuildLandingResponse {
   result: string;
   conversationState?: {
     currentStep: number;
@@ -37,7 +37,7 @@ interface GetTemplateResponse {
   };
 }
 
-export class GetTemplateTool extends BaseTool {
+export class BuildLandingTool extends BaseTool {
   name = TOOL_NAME;
   description = TOOL_DESCRIPTION;
 
@@ -68,12 +68,12 @@ export class GetTemplateTool extends BaseTool {
     standaloneRequestQuery,
   }: z.infer<typeof this.schema>) {
     try {
-      console.log(`🎨 GetTemplateTool executing for: ${message}`);
+      console.log(`🎨 BuildLandingTool executing for: ${message}`);
       console.log(`📁 Project: ${absolutePathToProjectDirectory}`);
       console.log(`📄 Current file: ${absolutePathToCurrentFile}`);
 
       // Call the API server for template generation
-      const { data } = await httpClient.post<GetTemplateResponse>(
+      const { data } = await httpClient.post<BuildLandingResponse>(
         "/api/template",
         {
           message,
@@ -95,7 +95,7 @@ export class GetTemplateTool extends BaseTool {
         ],
       };
     } catch (error) {
-      console.error("❌ Error executing GetTemplateTool:", error);
+      console.error("❌ Error executing BuildLandingTool:", error);
       
       // Provide fallback response if API server is not available
       const fallbackResponse = `
@@ -142,3 +142,4 @@ npx shadcn@latest add @tailark/pricing
     }
   }
 }
+

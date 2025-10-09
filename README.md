@@ -12,45 +12,62 @@ This project consists of two independent services:
 
 ### 1. **SuperUI MCP Server** (`superui-mcp/`)
 - MCP server that connects to Claude Code
-- Single tool: `get_component`
+- **2-stage discovery tools**: `list_components` + `get_component_details`
+- Template tool: `get_template`
 - Communicates with API server via HTTP
 
 ### 2. **SuperUI API Server** (`superui-server/`)
 - Express.js backend
-- Manages component library
-- Provides installation guides
+- Manages 70+ component library
+- Provides ranked search and installation guides
 
 ```
-User (Claude Code) → MCP Server → API Server → Component Library
-         ↑              ↓              ↓
-   Installation Guide ← Response ← Component Search
+User (Claude Code) → list_components → Candidates
+         ↓
+   Choose component
+         ↓
+   get_component_details → Installation Guide
+         ↓
+   npx install command
 ```
 
 ## ✨ Features
 
-- **Natural Language Interface**: Just describe what you need
-- **23 Components**: Complete shadcn/ui component library
-- **Smart Search**: Recognizes aliases and variations
+- **2-Stage Discovery**: Search first, then get details for better accuracy
+- **70+ Components**: shadcn/ui + AI + Advanced Buttons + Animated Text
+- **Semantic Search**: Ranked search with relevance scoring
+- **Category Filtering**: Filter by form, layout, ai, advanced-button, text, etc.
 - **Project-Aware**: Automatically detects your project structure
 - **Installation Commands**: Ready-to-use npx commands
 - **Usage Examples**: Import statements and code examples
 
-## 📦 Supported Components
+## 📦 Supported Components (70+)
 
-### Form Components (6)
-button, input, textarea, select, checkbox, radio-group
+### Basic shadcn/ui Components (43)
 
-### Layout Components (4)
-card, sheet, dialog, popover
+**Form Components (14)**
+button, input, textarea, select, checkbox, radio-group, label, form, switch, slider, combobox, toggle, toggle-group, input-otp
 
-### Navigation Components (3)
-tabs, accordion, breadcrumb
+**Layout Components (8)**
+card, sheet, dialog, popover, collapsible, resizable, scroll-area, aspect-ratio
 
-### Data Display Components (5)
-table, badge, avatar, progress, skeleton
+**Navigation Components (9)**
+tabs, accordion, breadcrumb, navigation-menu, menubar, command, context-menu, dropdown-menu, pagination
 
-### Feedback Components (3)
-alert, toast, separator
+**Data Display Components (10)**
+table, badge, avatar, progress, skeleton, calendar, date-picker, hover-card, carousel, tooltip
+
+**Feedback Components (4)**
+alert, toast, separator, sonner
+
+### AI Components (16) - shadcn.io
+ai-actions, ai-branch, ai-code-block, ai-conversation, ai-image, ai-inline-citation, ai-loader, ai-message, ai-prompt-input, ai-reasoning, ai-response, ai-sources, ai-suggestion, ai-task, ai-tool, ai-web-preview
+
+### Advanced Button Components (10) - shadcn.io
+glow-button, shimmer-button, magnetic-button, pulse-button, gradient-button, neon-button, shine-button, copy-button, expanding-button, tilt-button
+
+### Text Components (10) - shadcn.io
+gradient-text, typing-text, shimmering-text, counting-number, sliding-number, rolling-text, rotating-text, splitting-text, highlight-text, writing-text
 
 ## 🚀 Installation & Setup
 
@@ -194,63 +211,119 @@ If you already have other MCP servers configured:
 
 ## 🎯 Usage
 
-### Basic Examples
+### 2-Stage Discovery Workflow
 
-#### Request a Button Component
+SuperUI uses a **2-stage discovery process** for better accuracy:
+
+#### Stage 1: Search for Candidates
+When you ask for a component, Claude automatically calls `list_components` to find matching options:
+
+```
+User: "I need an animated button with glow effect"
+
+Claude: 
+  → list_components(query="animated button glow effect")
+  ← Returns: [glow-button, neon-button, shimmer-button, pulse-button, ...]
+```
+
+#### Stage 2: Get Detailed Instructions
+Claude reviews the candidates and calls `get_component_details` for the best match:
+
+```
+Claude:
+  → get_component_details(componentName="glow-button")
+  ← Returns: Full installation guide with commands, imports, and examples
+```
+
+### Example Usage Patterns
+
+#### Basic Component Request
 ```
 I need a button component for my React app
 ```
 
-#### Request Multiple Components
+**What happens behind the scenes:**
+1. Claude calls `list_components(query="button")`
+2. Finds: button, glow-button, shimmer-button, etc.
+3. Claude calls `get_component_details(componentName="button")`
+4. Provides installation guide
+
+#### Advanced Component Request
 ```
-I'm building a login form, I need input fields and a submit button
+I want an AI chat interface with streaming support
 ```
 
-#### Natural Language
+**What happens:**
+1. `list_components(query="ai chat streaming")`
+2. Finds: ai-conversation, ai-message, ai-loader, ai-prompt-input
+3. Claude reviews and selects appropriate components
+4. Gets details for each selected component
+
+#### Category-Filtered Request
 ```
-Add a card component to display user profiles
+Show me all animated text components
 ```
 
-```
-Show me how to use the dialog component
-```
+**What happens:**
+1. `list_components(query="animated text", category="text")`
+2. Finds: gradient-text, typing-text, shimmering-text, etc.
+3. Claude presents the list and can get details for any of them
 
 ### Response Example
 
-When you ask for a component, Claude Code will provide:
+When Claude gets component details, you'll see:
 
 ```markdown
-# Button
+# Glow Button
 
-A versatile button component with multiple variants and sizes
+Button with animated glow effect and neon styling
 
 ## 📦 Installation
 cd /path/to/your/project
-npx shadcn@latest add button
+npx shadcn@latest add glow-button
+
+## 📁 Installation Path
+The component will be installed to:
+`src/components/ui`
 
 ## 🔧 Import Statement
-import { Button } from "@/components/ui/button"
+import { GlowButton } from "@/components/button/glow-button"
 
 ## 💡 Basic Usage
-<Button variant="default">Click me</Button>
+<GlowButton>Click me</GlowButton>
 
 ## 🏷️ Component Details
-- **Name**: Button
-- **Package**: @radix-ui/react-button
-- **Category**: Form
-- **Tags**: button, click, action, primary, secondary
+- **Name**: Glow Button
+- **Package**: shadcn-button
+- **Category**: Advanced-button
+- **Library**: shadcn-button
+- **Tags**: button, glow, neon, animated, effect
+
+## 📚 Additional Resources
+- [Documentation](https://www.shadcn.io/button/glow-button)
+- [Button Components Collection](https://www.shadcn.io/button)
+
+## 💡 Pro Tips
+- These buttons include advanced animations and effects
+- Test performance on lower-end devices
+- Consider using reduced-motion queries for accessibility
 ```
 
-### Component Aliases
+### Smart Search Features
 
-The system recognizes common aliases:
+The ranking algorithm prioritizes:
 
-- `btn` → `button`
-- `text field` → `input`
-- `dropdown` → `select`
-- `modal` → `dialog`
-- `popup` → `toast`
-- And many more...
+1. **Exact matches** (highest priority)
+2. **Name prefix matches**
+3. **Name contains query**
+4. **Tag matches**
+5. **Description matches**
+6. **Multi-word bonuses**
+
+Examples:
+- `"button"` → Finds `button` first, then `glow-button`, `shimmer-button`
+- `"glow"` → Finds `glow-button` first, then `neon-button` (similar tags)
+- `"chat interface"` → Finds `ai-conversation`, `ai-message`, `ai-prompt-input`
 
 ## 🔧 Configuration
 
@@ -386,7 +459,65 @@ If you need to use a different port:
 GET http://localhost:3001/health
 ```
 
-### Component Information
+### List Components (New - Stage 1)
+```bash
+POST http://localhost:3001/api/component/list
+Content-Type: application/json
+
+{
+  "query": "animated button glow",
+  "category": "advanced-button",  // optional
+  "limit": 10                     // optional, default: 10
+}
+```
+
+**Response:**
+```json
+{
+  "results": [
+    {
+      "name": "glow-button",
+      "displayName": "Glow Button",
+      "description": "Button with animated glow effect",
+      "category": "advanced-button",
+      "library": "shadcn-button"
+    }
+  ],
+  "metadata": {
+    "query": "animated button glow",
+    "category": "all",
+    "count": 5,
+    "timestamp": "2025-10-08T...",
+    "version": "1.0.0"
+  }
+}
+```
+
+### Get Component Details (New - Stage 2)
+```bash
+POST http://localhost:3001/api/component/details
+Content-Type: application/json
+
+{
+  "componentName": "glow-button",
+  "absolutePathToCurrentFile": "/path/to/file.tsx",
+  "absolutePathToProjectDirectory": "/path/to/project"
+}
+```
+
+**Response:**
+```json
+{
+  "result": "# Glow Button\n\nButton with animated glow effect...",
+  "metadata": {
+    "componentName": "glow-button",
+    "timestamp": "2025-10-08T...",
+    "version": "1.0.0"
+  }
+}
+```
+
+### Legacy: Component Information (Deprecated)
 ```bash
 POST http://localhost:3001/api/component
 Content-Type: application/json
@@ -400,17 +531,17 @@ Content-Type: application/json
 }
 ```
 
-### Search Components
+### Search Components (Utility)
 ```bash
 GET http://localhost:3001/api/component/search?q=button
 ```
 
-### List All Components
+### List All Components (Utility)
 ```bash
-GET http://localhost:3001/api/component/list
+GET http://localhost:3001/api/component/list?category=form
 ```
 
-### Get Specific Component
+### Get Specific Component (Utility)
 ```bash
 GET http://localhost:3001/api/component/button
 ```
@@ -419,11 +550,13 @@ GET http://localhost:3001/api/component/button
 
 ```
 magic_to_super/
-├── superui-mcp/              # MCP Server
+├── superui-mcp/              # MCP Server (v2.0.0)
 │   ├── src/
 │   │   ├── index.ts          # Main server
 │   │   ├── tools/
-│   │   │   ├── get-component.ts
+│   │   │   ├── list-components.ts      # NEW: Stage 1 tool
+│   │   │   ├── get-component-details.ts # NEW: Stage 2 tool
+│   │   │   ├── get-component.ts        # DEPRECATED
 │   │   │   └── get-template.ts
 │   │   └── utils/
 │   │       ├── base-tool.ts
@@ -437,13 +570,13 @@ magic_to_super/
     ├── src/
     │   ├── index.ts          # Express server
     │   ├── routes/
-    │   │   ├── component.ts
+    │   │   ├── component.ts  # UPDATED: New endpoints
     │   │   └── template.ts
     │   ├── services/
-    │   │   ├── component-service.ts
+    │   │   ├── component-service.ts      # UPDATED: New functions
     │   │   └── template-service.ts
     │   └── utils/
-    │       ├── component-finder.ts
+    │       ├── component-finder.ts       # EXPANDED: 70+ components
     │       └── template-conversation.ts
     ├── dist/                 # Built files
     ├── package.json

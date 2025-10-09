@@ -1,16 +1,16 @@
 /**
- * Template service for SuperUI API Server
- * Handles template generation and conversation flow
+ * Landing page service for SuperUI API Server
+ * Handles landing page generation and conversation flow
  */
 
 import { 
   processConversationStep, 
   ConversationState, 
-  TemplateAnswers,
+  LandingAnswers,
   getNextQuestion 
-} from '../utils/template-conversation.js';
+} from '../utils/landing-conversation.js';
 
-export interface TemplateRequest {
+export interface LandingRequest {
   message: string;
   conversationState?: ConversationState;
   absolutePathToCurrentFile: string;
@@ -19,34 +19,34 @@ export interface TemplateRequest {
 }
 
 /**
- * Process template request and handle conversation flow
- * @param request - Template request from MCP server
- * @returns Conversation response or generated template
+ * Process landing page request and handle conversation flow
+ * @param request - Landing page request from MCP server
+ * @returns Conversation response or generated landing page
  */
-export async function getTemplate(request: TemplateRequest): Promise<string> {
+export async function getLanding(request: LandingRequest): Promise<string> {
   const { message, conversationState, absolutePathToCurrentFile, absolutePathToProjectDirectory } = request;
   
-  console.log(`🎨 Processing template request: ${message}`);
+  console.log(`🎨 Processing landing page request: ${message}`);
   
   // If no conversation state, start new conversation
   if (!conversationState) {
-    return startNewTemplateConversation();
+    return startNewLandingConversation();
   }
   
   // If conversation is in progress, process the current step
   if (conversationState.currentStep <= 4) {
-    return processTemplateConversation(conversationState, message);
+    return processLandingConversation(conversationState, message);
   }
   
-  // If conversation is complete, generate template
-  return generateTemplateFromConversation(conversationState, absolutePathToProjectDirectory);
+  // If conversation is complete, generate landing page
+  return generateLandingFromConversation(conversationState, absolutePathToProjectDirectory);
 }
 
 /**
- * Start a new template conversation
+ * Start a new landing page conversation
  * @returns First question in the conversation
  */
-function startNewTemplateConversation(): string {
+function startNewLandingConversation(): string {
   return `
 # 🎨 Landing Page Template Generator
 
@@ -73,9 +73,9 @@ Please respond with the number or name of your choice, and I'll ask the next que
  * Process the current conversation step
  * @param conversationState - Current conversation state
  * @param userAnswer - User's answer
- * @returns Next question or template result
+ * @returns Next question or landing page result
  */
-function processTemplateConversation(conversationState: ConversationState, userAnswer: string): string {
+function processLandingConversation(conversationState: ConversationState, userAnswer: string): string {
   const result = processConversationStep(conversationState, userAnswer);
   
   if (result.type === 'question') {
@@ -133,25 +133,25 @@ ${Object.entries(answers).map(([key, value]) => `- ${key}: ${value}`).join('\n')
 }
 
 /**
- * Generate template from completed conversation
+ * Generate landing page from completed conversation
  * @param conversationState - Completed conversation state
  * @param projectPath - Project root path
- * @returns Generated template
+ * @returns Generated landing page
  */
-function generateTemplateFromConversation(
+function generateLandingFromConversation(
   conversationState: ConversationState, 
   projectPath: string
 ): string {
   const { answers } = conversationState;
   
   // Generate sections based on answers
-  const templateAnswers: TemplateAnswers = {
+  const landingAnswers: LandingAnswers = {
     purpose: answers.purpose || '',
     targetAudience: answers.targetAudience || '',
     desiredAction: answers.desiredAction || '',
     style: answers.style || ''
   };
-  const sections = generateSectionsFromAnswers(templateAnswers);
+  const sections = generateSectionsFromAnswers(landingAnswers);
   
   return `
 # 🎨 Your Custom Landing Page Template
@@ -258,7 +258,7 @@ Just ask and I'll provide specific guidance!
  * @param answers - User's answers
  * @returns Array of recommended sections
  */
-function generateSectionsFromAnswers(answers: TemplateAnswers): Array<{
+function generateSectionsFromAnswers(answers: LandingAnswers): Array<{
   name: string;
   tailarkComponent: string;
   description: string;
@@ -413,3 +413,4 @@ function getStyleRecommendations(style: string): string {
 - Focus on user experience and conversion`;
   }
 }
+
