@@ -8,19 +8,14 @@ import { z } from "zod";
 export abstract class BaseTool {
   abstract name: string;
   abstract description: string;
-  abstract schema: z.ZodObject<any>;
+  abstract schema: z.ZodObject<Record<number, z.ZodTypeAny>>;
 
   /**
    * Register this tool with the MCP server
    * @param server - The MCP server instance
    */
   register(server: McpServer) {
-    server.tool(
-      this.name,
-      this.description,
-      this.schema.shape,
-      this.execute.bind(this)
-    );
+    server.tool(this.name, this.description, this.schema.shape, this.execute.bind(this));
   }
 
   /**
@@ -29,6 +24,6 @@ export abstract class BaseTool {
    * @returns Promise resolving to tool execution result
    */
   abstract execute(args: z.infer<typeof this.schema>): Promise<{
-    content: Array<{ type: "text"; text: string }>;
+    content: Array<{ type: "text"; text: string } | { type: "image"; data: string; mimeType: string }>;
   }>;
 }
