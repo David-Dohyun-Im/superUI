@@ -11,12 +11,15 @@ SuperUI MCP simplifies the process of adding shadcn/ui components to your React 
 This project consists of two independent services:
 
 ### 1. **SuperUI MCP Server** (`superui-mcp/`)
+
 - MCP server that connects to Claude Code
 - **2-stage discovery tools**: `list_components` + `get_component_details`
-- Template tool: `get_template`
+- Template tool: `build_landing`
+- **Frontend cloning tool**: `clone_frontend`
 - Communicates with API server via HTTP
 
 ### 2. **SuperUI API Server** (`superui-server/`)
+
 - Express.js backend
 - Manages 70+ component library
 - Provides ranked search and installation guides
@@ -37,6 +40,7 @@ User (Claude Code) → list_components → Candidates
 - **70+ Components**: shadcn/ui + AI + Advanced Buttons + Animated Text
 - **Semantic Search**: Ranked search with relevance scoring
 - **Category Filtering**: Filter by form, layout, ai, advanced-button, text, etc.
+- **Frontend Cloning**: Clone any website by iteratively comparing screenshots
 - **Project-Aware**: Automatically detects your project structure
 - **Installation Commands**: Ready-to-use npx commands
 - **Usage Examples**: Import statements and code examples
@@ -61,12 +65,15 @@ table, badge, avatar, progress, skeleton, calendar, date-picker, hover-card, car
 alert, toast, separator, sonner
 
 ### AI Components (16) - shadcn.io
+
 ai-actions, ai-branch, ai-code-block, ai-conversation, ai-image, ai-inline-citation, ai-loader, ai-message, ai-prompt-input, ai-reasoning, ai-response, ai-sources, ai-suggestion, ai-task, ai-tool, ai-web-preview
 
 ### Advanced Button Components (10) - shadcn.io
+
 glow-button, shimmer-button, magnetic-button, pulse-button, gradient-button, neon-button, shine-button, copy-button, expanding-button, tilt-button
 
 ### Text Components (10) - shadcn.io
+
 gradient-text, typing-text, shimmering-text, counting-number, sliding-number, rolling-text, rotating-text, splitting-text, highlight-text, writing-text
 
 ## 🚀 Installation & Setup
@@ -88,13 +95,16 @@ cd magic_to_super
 ### Step 2: Install & Build
 
 #### Install API Server
+
 ```bash
 cd superui-server
 npm install
+npx playwright install chromium
 npm run build
 ```
 
 #### Install MCP Server
+
 ```bash
 cd ../superui-mcp
 npm install
@@ -111,11 +121,13 @@ npm start
 The API server will start on `http://localhost:3001`
 
 **Verify it's running:**
+
 ```bash
 curl http://localhost:3001/health
 ```
 
 Expected response:
+
 ```json
 {
   "status": "OK",
@@ -138,11 +150,13 @@ Expected response:
 The `.claude.json` file location varies by OS:
 
 **macOS/Linux:**
+
 ```
 ~/.claude.json
 ```
 
 **Windows:**
+
 ```
 %USERPROFILE%\.claude.json
 ```
@@ -155,9 +169,7 @@ Add the following configuration:
     "superui": {
       "type": "stdio",
       "command": "node",
-      "args": [
-        "/absolute/path/to/magic_to_super/superui-mcp/dist/index.js"
-      ],
+      "args": ["/absolute/path/to/magic_to_super/superui-mcp/dist/index.js"],
       "env": {
         "API_BASE_URL": "http://localhost:3001"
       }
@@ -169,6 +181,7 @@ Add the following configuration:
 **Important:** Replace `/absolute/path/to/magic_to_super` with your actual project path.
 
 **Example paths:**
+
 - macOS: `/Users/username/projects/magic_to_super`
 - Linux: `/home/username/projects/magic_to_super`
 - Windows: `C:\\Users\\username\\projects\\magic_to_super`
@@ -186,9 +199,7 @@ If you already have other MCP servers configured:
     "superui": {
       "type": "stdio",
       "command": "node",
-      "args": [
-        "/absolute/path/to/magic_to_super/superui-mcp/dist/index.js"
-      ],
+      "args": ["/absolute/path/to/magic_to_super/superui-mcp/dist/index.js"],
       "env": {
         "API_BASE_URL": "http://localhost:3001"
       }
@@ -216,17 +227,19 @@ If you already have other MCP servers configured:
 SuperUI uses a **2-stage discovery process** for better accuracy:
 
 #### Stage 1: Search for Candidates
+
 When you ask for a component, Claude automatically calls `list_components` to find matching options:
 
 ```
 User: "I need an animated button with glow effect"
 
-Claude: 
+Claude:
   → list_components(query="animated button glow effect")
   ← Returns: [glow-button, neon-button, shimmer-button, pulse-button, ...]
 ```
 
 #### Stage 2: Get Detailed Instructions
+
 Claude reviews the candidates and calls `get_component_details` for the best match:
 
 ```
@@ -238,33 +251,39 @@ Claude:
 ### Example Usage Patterns
 
 #### Basic Component Request
+
 ```
 I need a button component for my React app
 ```
 
 **What happens behind the scenes:**
+
 1. Claude calls `list_components(query="button")`
 2. Finds: button, glow-button, shimmer-button, etc.
 3. Claude calls `get_component_details(componentName="button")`
 4. Provides installation guide
 
 #### Advanced Component Request
+
 ```
 I want an AI chat interface with streaming support
 ```
 
 **What happens:**
+
 1. `list_components(query="ai chat streaming")`
 2. Finds: ai-conversation, ai-message, ai-loader, ai-prompt-input
 3. Claude reviews and selects appropriate components
 4. Gets details for each selected component
 
 #### Category-Filtered Request
+
 ```
 Show me all animated text components
 ```
 
 **What happens:**
+
 1. `list_components(query="animated text", category="text")`
 2. Finds: gradient-text, typing-text, shimmering-text, etc.
 3. Claude presents the list and can get details for any of them
@@ -279,20 +298,25 @@ When Claude gets component details, you'll see:
 Button with animated glow effect and neon styling
 
 ## 📦 Installation
+
 cd /path/to/your/project
 npx shadcn@latest add glow-button
 
 ## 📁 Installation Path
+
 The component will be installed to:
 `src/components/ui`
 
 ## 🔧 Import Statement
+
 import { GlowButton } from "@/components/button/glow-button"
 
 ## 💡 Basic Usage
+
 <GlowButton>Click me</GlowButton>
 
 ## 🏷️ Component Details
+
 - **Name**: Glow Button
 - **Package**: shadcn-button
 - **Category**: Advanced-button
@@ -300,10 +324,12 @@ import { GlowButton } from "@/components/button/glow-button"
 - **Tags**: button, glow, neon, animated, effect
 
 ## 📚 Additional Resources
+
 - [Documentation](https://www.shadcn.io/button/glow-button)
 - [Button Components Collection](https://www.shadcn.io/button)
 
 ## 💡 Pro Tips
+
 - These buttons include advanced animations and effects
 - Test performance on lower-end devices
 - Consider using reduced-motion queries for accessibility
@@ -321,9 +347,117 @@ The ranking algorithm prioritizes:
 6. **Multi-word bonuses**
 
 Examples:
+
 - `"button"` → Finds `button` first, then `glow-button`, `shimmer-button`
 - `"glow"` → Finds `glow-button` first, then `neon-button` (similar tags)
 - `"chat interface"` → Finds `ai-conversation`, `ai-message`, `ai-prompt-input`
+
+## 🎨 Frontend Cloning
+
+SuperUI includes a powerful **frontend cloning tool** that helps you recreate any website's UI by iteratively comparing screenshots.
+
+### Key Features
+
+- **🌐 Playwright-Powered**: Server automatically captures screenshots using headless browser
+- **👁️ Vision-Based Comparison**: LLM uses multimodal capabilities to compare screenshots
+- **🔄 Iterative Refinement**: Continuous improvement through multiple iterations
+- **🎯 Pattern Matching**: Automatically suggests relevant shadcn/ui components
+- **📦 Stateless Design**: No session management, LLM controls entire workflow
+- **🚀 Zero Manual Work**: All screenshot capture handled by server
+
+### Usage Example
+
+#### Simple Request
+
+```
+Clone this website: https://example.com
+```
+
+**What happens:**
+
+1. Server captures screenshot of target website
+2. LLM analyzes structure, colors, components
+3. Server suggests matching shadcn/ui components
+4. LLM implements initial version
+5. Server captures both target and current screenshots
+6. LLM compares screenshots and identifies differences
+7. LLM iteratively improves until satisfied
+
+#### Advanced Request with Local Screenshot
+
+```
+Clone this design (uploads screenshot)
+```
+
+**What happens:**
+
+1. User provides screenshot instead of URL
+2. Same workflow as above
+3. No need for target URL
+
+### Request Types
+
+The tool supports 4 request types:
+
+#### 1. `initial_analysis`
+
+Captures target screenshot and provides analysis prompt.
+
+**Parameters:**
+
+- `targetUrl` (optional): Website URL to clone
+- `targetScreenshotBase64` (optional): Or provide screenshot directly
+- `screenshotOptions` (optional): Viewport size, fullPage, delay, etc.
+
+**Returns:**
+
+- Analysis prompt with checklist
+- Target screenshot as image
+
+#### 2. `component_suggestion`
+
+Matches components based on your analysis.
+
+**Parameters:**
+
+- `targetDescription`: Your vision analysis of the target
+
+**Returns:**
+
+- Recommended components
+- Installation commands
+- Usage examples
+
+#### 3. `compare_screenshots`
+
+Captures both target and current implementation for comparison.
+
+**Parameters:**
+
+- `targetUrl` or `targetScreenshotBase64`: Target to compare against
+- `localUrl`: Your development server (e.g., `http://localhost:3000`)
+- `iteration` (optional): Current iteration number
+
+**Returns:**
+
+- Comparison checklist prompt
+- Target screenshot
+- Current implementation screenshot
+
+#### 4. `iteration_guide`
+
+Provides specific improvement suggestions based on differences.
+
+**Parameters:**
+
+- `differences`: Array of differences found during comparison
+- `iteration` (optional): Current iteration number
+
+**Returns:**
+
+- Priority-based improvement guide
+- Specific suggestions for each difference
+- Next steps
 
 ## 🔧 Configuration
 
@@ -365,29 +499,34 @@ If you need to use a different port:
 ### MCP Server Not Working
 
 **Symptoms:**
+
 - Claude Code doesn't respond to component requests
 - "Tool not available" errors
 
 **Solutions:**
 
 1. **Check VS Code Output:**
+
    - View → Output (Cmd+Shift+U)
    - Select "Claude Code" from dropdown
    - Look for error messages
 
 2. **Verify `.claude.json`:**
+
    ```bash
    # Check JSON syntax
    cat ~/.claude.json | jq
    ```
 
 3. **Check MCP server path:**
+
    ```bash
    # Verify file exists
    ls /path/to/magic_to_super/superui-mcp/dist/index.js
    ```
 
 4. **Rebuild MCP server:**
+
    ```bash
    cd superui-mcp
    npm run build
@@ -398,27 +537,31 @@ If you need to use a different port:
 ### API Server Not Responding
 
 **Symptoms:**
+
 - "API Server Unavailable" messages
 - Fallback installation instructions
 
 **Solutions:**
 
 1. **Check API server status:**
+
    ```bash
    curl http://localhost:3001/health
    ```
 
 2. **Restart API server:**
+
    ```bash
    cd superui-server
    npm start
    ```
 
 3. **Check if port 3001 is in use:**
+
    ```bash
    # macOS/Linux
    lsof -i :3001
-   
+
    # Windows
    netstat -ano | findstr :3001
    ```
@@ -428,16 +571,19 @@ If you need to use a different port:
 ### Component Not Found
 
 **Symptoms:**
+
 - "Component not found" messages
 
 **Solutions:**
 
 1. **Check available components:**
+
    ```bash
    curl http://localhost:3001/api/component/list
    ```
 
 2. **Search for component:**
+
    ```bash
    curl "http://localhost:3001/api/component/search?q=button"
    ```
@@ -455,11 +601,13 @@ If you need to use a different port:
 ## 🌐 API Endpoints
 
 ### Health Check
+
 ```bash
 GET http://localhost:3001/health
 ```
 
 ### List Components (New - Stage 1)
+
 ```bash
 POST http://localhost:3001/api/component/list
 Content-Type: application/json
@@ -472,6 +620,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "results": [
@@ -494,6 +643,7 @@ Content-Type: application/json
 ```
 
 ### Get Component Details (New - Stage 2)
+
 ```bash
 POST http://localhost:3001/api/component/details
 Content-Type: application/json
@@ -506,6 +656,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "result": "# Glow Button\n\nButton with animated glow effect...",
@@ -518,6 +669,7 @@ Content-Type: application/json
 ```
 
 ### Legacy: Component Information (Deprecated)
+
 ```bash
 POST http://localhost:3001/api/component
 Content-Type: application/json
@@ -532,18 +684,89 @@ Content-Type: application/json
 ```
 
 ### Search Components (Utility)
+
 ```bash
 GET http://localhost:3001/api/component/search?q=button
 ```
 
 ### List All Components (Utility)
+
 ```bash
 GET http://localhost:3001/api/component/list?category=form
 ```
 
 ### Get Specific Component (Utility)
+
 ```bash
 GET http://localhost:3001/api/component/button
+```
+
+### Clone Frontend (Utility)
+
+```bash
+POST http://localhost:3001/api/clone
+Content-Type: application/json
+
+{
+  "requestType": "initial_analysis",
+  "targetUrl": "https://example.com",
+  "screenshotOptions": {
+    "fullPage": true,
+    "width": 1920,
+    "height": 1080,
+    "delay": 2000
+  }
+}
+```
+
+**Request Types:**
+
+- `initial_analysis` - Capture and analyze target screenshot
+- `component_suggestion` - Get component recommendations
+- `compare_screenshots` - Compare target vs current
+- `iteration_guide` - Get improvement suggestions
+
+**Response:**
+
+```json
+{
+  "text": "Analysis prompt and instructions...",
+  "screenshots": {
+    "target": {
+      "data": "base64-encoded-image",
+      "mimeType": "image/png",
+      "metadata": { "width": 1920, "height": 1080, "url": "...", "timestamp": "..." }
+    },
+    "current": {
+      "data": "base64-encoded-image",
+      "mimeType": "image/png",
+      "metadata": { ... }
+    }
+  },
+  "components": [ ... ],
+  "installations": [ "npx shadcn@latest add button", ... ],
+  "metadata": {
+    "requestType": "initial_analysis",
+    "timestamp": "2025-10-12T...",
+    "version": "1.0.0"
+  }
+}
+```
+
+### Standalone Screenshot Capture (Utility)
+
+```bash
+POST http://localhost:3001/api/clone/screenshot
+Content-Type: application/json
+
+{
+  "url": "https://example.com",
+  "options": {
+    "fullPage": true,
+    "width": 1920,
+    "height": 1080
+  }
+}
 ```
 
 ## 📁 Project Structure
@@ -554,10 +777,11 @@ magic_to_super/
 │   ├── src/
 │   │   ├── index.ts          # Main server
 │   │   ├── tools/
-│   │   │   ├── list-components.ts      # NEW: Stage 1 tool
-│   │   │   ├── get-component-details.ts # NEW: Stage 2 tool
-│   │   │   ├── get-component.ts        # DEPRECATED
-│   │   │   └── get-template.ts
+│   │   │   ├── list-components.ts       # Stage 1: Component discovery
+│   │   │   ├── get-components.ts        # DEPRECATED
+│   │   │   ├── get-component-details.ts # Stage 2: Component details
+│   │   │   ├── build-landing.ts         # Template builder
+│   │   │   └── clone-frontend.ts        # NEW: Frontend cloning
 │   │   └── utils/
 │   │       ├── base-tool.ts
 │   │       ├── config.ts
@@ -570,14 +794,19 @@ magic_to_super/
     ├── src/
     │   ├── index.ts          # Express server
     │   ├── routes/
-    │   │   ├── component.ts  # UPDATED: New endpoints
-    │   │   └── template.ts
+    │   │   ├── component.ts  # Component endpoints
+    │   │   ├── landing.ts    # Template endpoints
+    │   │   └── clone.ts      # Clone endpoints
     │   ├── services/
-    │   │   ├── component-service.ts      # UPDATED: New functions
-    │   │   └── template-service.ts
+    │   │   ├── component-service.ts       # Component logic
+    │   │   ├── landing-service.ts         # Template logic
+    │   │   ├── clone-service.ts           # Clone logic
+    │   │   └── screenshot-service.ts      # Playwright screenshots
     │   └── utils/
-    │       ├── component-finder.ts       # EXPANDED: 70+ components
-    │       └── template-conversation.ts
+    │       ├── component-finder.ts        # 70+ components database
+    │       ├── component-matcher.ts       # Pattern matching
+    │       ├── clone-prompts.ts           # Analysis prompts
+    │       └── landing-conversation.ts    # Template conversation
     ├── dist/                 # Built files
     ├── package.json
     └── tsconfig.json
@@ -588,12 +817,14 @@ magic_to_super/
 ### Running in Development Mode
 
 #### API Server
+
 ```bash
 cd superui-server
 npm run dev
 ```
 
 #### MCP Server
+
 ```bash
 cd superui-mcp
 npm run dev
@@ -672,6 +903,7 @@ CMD ["npm", "start"]
 ```
 
 Build and run:
+
 ```bash
 docker build -t superui-api .
 docker run -p 3001:3001 superui-api
@@ -679,13 +911,13 @@ docker run -p 3001:3001 superui-api
 
 ## 📝 Key Differences from Magic MCP
 
-| Feature | Magic MCP | SuperUI MCP |
-|---------|-----------|-------------|
-| **Tools** | 4 tools | 1 tool (`get_component`) |
-| **Complexity** | High (callback server, browser) | Low (simple HTTP API) |
-| **Dependencies** | External APIs (21st.dev, SVGL) | Self-contained API server |
-| **Installation** | Auto file generation | npx command guidance |
-| **Customization** | Limited | Full control over components |
+| Feature           | Magic MCP                       | SuperUI MCP                  |
+| ----------------- | ------------------------------- | ---------------------------- |
+| **Tools**         | 4 tools                         | 1 tool (`get_component`)     |
+| **Complexity**    | High (callback server, browser) | Low (simple HTTP API)        |
+| **Dependencies**  | External APIs (21st.dev, SVGL)  | Self-contained API server    |
+| **Installation**  | Auto file generation            | npx command guidance         |
+| **Customization** | Limited                         | Full control over components |
 
 ## 🔗 Resources
 
@@ -710,6 +942,7 @@ MIT License
 ## 💬 Support
 
 For issues and questions:
+
 1. Check the API server logs
 2. Check VS Code Output panel (Claude Code)
 3. Verify MCP server build status
@@ -722,6 +955,7 @@ For issues and questions:
 - [ ] Claude Code extension installed in VS Code
 - [ ] Repository cloned
 - [ ] API server installed and built
+- [ ] Playwright chromium installed (`npx playwright install chromium`)
 - [ ] MCP server installed and built
 - [ ] API server running on port 3001
 - [ ] `.claude.json` configured with correct absolute path
@@ -731,5 +965,8 @@ For issues and questions:
 
 ---
 
-**Ready to go!** Ask Claude Code for UI components and get instant installation instructions! 🚀
+**Ready to go!**
 
+- Ask Claude Code for UI components and get instant installation instructions! 🚀
+- Clone any website with "Clone https://example.com" 🎨
+- Build landing pages with conversational templates! 📄
