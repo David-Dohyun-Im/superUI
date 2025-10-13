@@ -198,7 +198,11 @@ ${installCommands}
 1. Install the recommended components using the commands above if needed, or use the \`list_components\` and \`get_component_details\` tools to find more components.
 2. Generate your complete implementation based on your analysis
 3. Use the component usage examples above as reference
-4. Start your local development server (e.g., \`npm run dev\`)
+4. **Important:** Make sure your local development server is running and accessible
+  - If you or the user haven't started it yet, run your dev server (e.g., \`npm run dev\`, \`yarn dev\`, or \`pnpm dev\`)
+  - Verify that the server is running at your specified URL
+  - Sometimes the server is running on a different port, so make sure to check the port
+  - Ensure there are no build errors or runtime errors in your console
 5. Call \`requestType: 'compare_screenshots'\` with \`localUrl\` to compare
 
 **Generate the implementation now!**
