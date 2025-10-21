@@ -110,18 +110,21 @@ The SuperUI API server is not responding. Here's a manual template creation guid
 ### Manual Template Creation
 \`\`\`bash
 cd ${absolutePathToProjectDirectory}
-npx shadcn@latest add @tailark/hero
-npx shadcn@latest add @tailark/features
-npx shadcn@latest add @tailark/pricing
+pnpm dlx shadcn add @tailark/hero-section-1
+pnpm dlx shadcn add @tailark/features-1
+pnpm dlx shadcn add @tailark/pricing-1
 \`\`\`
 
 ### Available Tailark Components
-- Hero sections
-- Features sections  
-- Pricing tables
-- Testimonials
-- Call-to-action sections
-- Footer components
+Visit https://tailark.com to browse all available components:
+- Hero sections (9 variants)
+- Features sections (12 variants)
+- Pricing tables (5 variants)
+- Testimonials (6 variants)
+- Call-to-action sections (3 variants)
+- Team sections (2 variants)
+- Footer components (5 variants)
+- Stats, Content, Integrations, and more
 
 ### Next Steps
 1. Make sure the SuperUI API server is running

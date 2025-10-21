@@ -172,7 +172,7 @@ ${sections.map((section, index) => `
 - **Tailark Component**: \`@tailark/${section.tailarkComponent}\`
 - **Description**: ${section.description}
 - **Priority**: ${section.priority}/10
-- **Installation**: \`npx shadcn@latest add @tailark/${section.tailarkComponent}\`
+- **Installation**: \`pnpm dlx shadcn add @tailark/${section.tailarkComponent}\`
 `).join('')}
 
 ## 🚀 Quick Setup
@@ -181,7 +181,7 @@ ${sections.map((section, index) => `
 cd ${projectPath}
 
 # Install all recommended components
-${sections.map(section => `npx shadcn@latest add @tailark/${section.tailarkComponent}`).join('\n')}
+${sections.map(section => `pnpm dlx shadcn add @tailark/${section.tailarkComponent}`).join('\n')}
 \`\`\`
 
 ## 📁 Suggested File Structure
@@ -237,7 +237,7 @@ ${getStyleRecommendations(answers.style)}
 
 ## 📚 Additional Resources
 
-- [Tailark Documentation](https://tailark.com/docs)
+- [Tailark Blocks](https://tailark.com)
 - [Shadcn/UI Components](https://ui.shadcn.com/docs)
 - [Tailwind CSS](https://tailwindcss.com/docs)
 
@@ -274,7 +274,7 @@ function generateSectionsFromAnswers(answers: LandingAnswers): Array<{
   // Always include hero section
   sections.push({
     name: "Hero Section",
-    tailarkComponent: "hero",
+    tailarkComponent: "hero-section-1",
     description: "Main landing section with headline and CTA",
     priority: 10
   });
@@ -283,41 +283,41 @@ function generateSectionsFromAnswers(answers: LandingAnswers): Array<{
   switch (answers.purpose) {
     case "SaaS Product":
       sections.push(
-        { name: "Features", tailarkComponent: "features", description: "Product features and benefits", priority: 9 },
-        { name: "Pricing", tailarkComponent: "pricing", description: "Pricing plans and tiers", priority: 8 },
-        { name: "Testimonials", tailarkComponent: "testimonials", description: "Customer testimonials", priority: 7 }
+        { name: "Features", tailarkComponent: "features-1", description: "Product features and benefits", priority: 9 },
+        { name: "Pricing", tailarkComponent: "pricing-1", description: "Pricing plans and tiers", priority: 8 },
+        { name: "Testimonials", tailarkComponent: "testimonials-1", description: "Customer testimonials", priority: 7 }
       );
       break;
       
     case "Mobile App":
       sections.push(
-        { name: "Features", tailarkComponent: "features", description: "App features and functionality", priority: 9 },
-        { name: "Stats", tailarkComponent: "stats", description: "Download numbers and user stats", priority: 8 },
-        { name: "Testimonials", tailarkComponent: "testimonials", description: "User reviews and ratings", priority: 7 }
+        { name: "Features", tailarkComponent: "features-1", description: "App features and functionality", priority: 9 },
+        { name: "Stats", tailarkComponent: "stats-1", description: "Download numbers and user stats", priority: 8 },
+        { name: "Testimonials", tailarkComponent: "testimonials-1", description: "User reviews and ratings", priority: 7 }
       );
       break;
       
     case "Ecommerce Product":
       sections.push(
-        { name: "Features", tailarkComponent: "features", description: "Product features and benefits", priority: 9 },
-        { name: "Testimonials", tailarkComponent: "testimonials", description: "Customer reviews", priority: 8 },
-        { name: "Content", tailarkComponent: "content", description: "Product details", priority: 7 }
+        { name: "Features", tailarkComponent: "features-1", description: "Product features and benefits", priority: 9 },
+        { name: "Testimonials", tailarkComponent: "testimonials-1", description: "Customer reviews", priority: 8 },
+        { name: "Content", tailarkComponent: "content-1", description: "Product details", priority: 7 }
       );
       break;
       
     case "Personal Portfolio":
       sections.push(
-        { name: "Content", tailarkComponent: "content", description: "About section and experience", priority: 9 },
-        { name: "Testimonials", tailarkComponent: "testimonials", description: "Client testimonials", priority: 8 },
-        { name: "Team", tailarkComponent: "team", description: "Personal information", priority: 7 }
+        { name: "Content", tailarkComponent: "content-1", description: "About section and experience", priority: 9 },
+        { name: "Testimonials", tailarkComponent: "testimonials-1", description: "Client testimonials", priority: 8 },
+        { name: "Team", tailarkComponent: "team-1", description: "Personal information", priority: 7 }
       );
       break;
       
     case "Event":
       sections.push(
-        { name: "Content", tailarkComponent: "content", description: "Event details and agenda", priority: 9 },
-        { name: "Stats", tailarkComponent: "stats", description: "Event statistics", priority: 8 },
-        { name: "Testimonials", tailarkComponent: "testimonials", description: "Previous event feedback", priority: 7 }
+        { name: "Content", tailarkComponent: "content-1", description: "Event details and agenda", priority: 9 },
+        { name: "Stats", tailarkComponent: "stats-1", description: "Event statistics", priority: 8 },
+        { name: "Testimonials", tailarkComponent: "testimonials-1", description: "Previous event feedback", priority: 7 }
       );
       break;
   }
@@ -325,8 +325,8 @@ function generateSectionsFromAnswers(answers: LandingAnswers): Array<{
   // Add sections based on target audience
   if (answers.targetAudience === "Investors") {
     sections.push(
-      { name: "Stats", tailarkComponent: "stats", description: "Key metrics and growth", priority: 8 },
-      { name: "Team", tailarkComponent: "team", description: "Founding team and advisors", priority: 7 }
+      { name: "Stats", tailarkComponent: "stats-1", description: "Key metrics and growth", priority: 8 },
+      { name: "Team", tailarkComponent: "team-1", description: "Founding team and advisors", priority: 7 }
     );
   }
   
@@ -338,7 +338,7 @@ function generateSectionsFromAnswers(answers: LandingAnswers): Array<{
     case "Contact you":
       sections.push({ 
         name: "Call to Action", 
-        tailarkComponent: "call-to-action", 
+        tailarkComponent: "call-to-action-1", 
         description: "Action-oriented section", 
         priority: 9 
       });
@@ -346,7 +346,7 @@ function generateSectionsFromAnswers(answers: LandingAnswers): Array<{
     case "Buy":
       sections.push({ 
         name: "Pricing", 
-        tailarkComponent: "pricing", 
+        tailarkComponent: "pricing-1", 
         description: "Product pricing", 
         priority: 9 
       });
@@ -356,7 +356,7 @@ function generateSectionsFromAnswers(answers: LandingAnswers): Array<{
   // Always include footer
   sections.push({
     name: "Footer",
-    tailarkComponent: "footer",
+    tailarkComponent: "footer-1",
     description: "Site footer with links",
     priority: 1
   });

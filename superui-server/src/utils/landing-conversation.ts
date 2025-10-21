@@ -154,7 +154,7 @@ ${sections.map((section, index) => `
 
 \`\`\`bash
 # Install all recommended components
-${sections.map(section => `npx shadcn@latest add @tailark/${section.tailarkComponent}`).join('\n')}
+${sections.map(section => `pnpm dlx shadcn add @tailark/${section.tailarkComponent}`).join('\n')}
 \`\`\`
 
 ## 📁 File Structure
@@ -211,7 +211,7 @@ function selectSectionsForLanding(answers: LandingAnswers): LandingSection[] {
   sections.push({
     name: "Hero Section",
     priority: 10,
-    tailarkComponent: "hero",
+    tailarkComponent: "hero-section-1",
     description: "Main landing section with headline and CTA"
   });
   
@@ -219,41 +219,41 @@ function selectSectionsForLanding(answers: LandingAnswers): LandingSection[] {
   switch (answers.purpose) {
     case "SaaS Product":
       sections.push(
-        { name: "Features", priority: 9, tailarkComponent: "features", description: "Product features and benefits" },
-        { name: "Pricing", priority: 8, tailarkComponent: "pricing", description: "Pricing plans and tiers" },
-        { name: "Testimonials", priority: 7, tailarkComponent: "testimonials", description: "Customer testimonials and reviews" }
+        { name: "Features", priority: 9, tailarkComponent: "features-1", description: "Product features and benefits" },
+        { name: "Pricing", priority: 8, tailarkComponent: "pricing-1", description: "Pricing plans and tiers" },
+        { name: "Testimonials", priority: 7, tailarkComponent: "testimonials-1", description: "Customer testimonials and reviews" }
       );
       break;
       
     case "Mobile App":
       sections.push(
-        { name: "Features", priority: 9, tailarkComponent: "features", description: "App features and functionality" },
-        { name: "Stats", priority: 8, tailarkComponent: "stats", description: "Download numbers and user stats" },
-        { name: "Testimonials", priority: 7, tailarkComponent: "testimonials", description: "User reviews and ratings" }
+        { name: "Features", priority: 9, tailarkComponent: "features-1", description: "App features and functionality" },
+        { name: "Stats", priority: 8, tailarkComponent: "stats-1", description: "Download numbers and user stats" },
+        { name: "Testimonials", priority: 7, tailarkComponent: "testimonials-1", description: "User reviews and ratings" }
       );
       break;
       
     case "Ecommerce Product":
       sections.push(
-        { name: "Features", priority: 9, tailarkComponent: "features", description: "Product features and benefits" },
-        { name: "Testimonials", priority: 8, tailarkComponent: "testimonials", description: "Customer reviews" },
-        { name: "Content", priority: 7, tailarkComponent: "content", description: "Product details and specifications" }
+        { name: "Features", priority: 9, tailarkComponent: "features-1", description: "Product features and benefits" },
+        { name: "Testimonials", priority: 8, tailarkComponent: "testimonials-1", description: "Customer reviews" },
+        { name: "Content", priority: 7, tailarkComponent: "content-1", description: "Product details and specifications" }
       );
       break;
       
     case "Personal Portfolio":
       sections.push(
-        { name: "Content", priority: 9, tailarkComponent: "content", description: "About section and experience" },
-        { name: "Testimonials", priority: 8, tailarkComponent: "testimonials", description: "Client testimonials" },
-        { name: "Team", priority: 7, tailarkComponent: "team", description: "Personal information" }
+        { name: "Content", priority: 9, tailarkComponent: "content-1", description: "About section and experience" },
+        { name: "Testimonials", priority: 8, tailarkComponent: "testimonials-1", description: "Client testimonials" },
+        { name: "Team", priority: 7, tailarkComponent: "team-1", description: "Personal information" }
       );
       break;
       
     case "Event":
       sections.push(
-        { name: "Content", priority: 9, tailarkComponent: "content", description: "Event details and agenda" },
-        { name: "Stats", priority: 8, tailarkComponent: "stats", description: "Event statistics and highlights" },
-        { name: "Testimonials", priority: 7, tailarkComponent: "testimonials", description: "Previous event feedback" }
+        { name: "Content", priority: 9, tailarkComponent: "content-1", description: "Event details and agenda" },
+        { name: "Stats", priority: 8, tailarkComponent: "stats-1", description: "Event statistics and highlights" },
+        { name: "Testimonials", priority: 7, tailarkComponent: "testimonials-1", description: "Previous event feedback" }
       );
       break;
   }
@@ -261,27 +261,27 @@ function selectSectionsForLanding(answers: LandingAnswers): LandingSection[] {
   // Add sections based on target audience
   if (answers.targetAudience === "Investors") {
     sections.push(
-      { name: "Stats", priority: 8, tailarkComponent: "stats", description: "Key metrics and growth numbers" },
-      { name: "Team", priority: 7, tailarkComponent: "team", description: "Founding team and advisors" }
+      { name: "Stats", priority: 8, tailarkComponent: "stats-1", description: "Key metrics and growth numbers" },
+      { name: "Team", priority: 7, tailarkComponent: "team-1", description: "Founding team and advisors" }
     );
   }
   
   // Add sections based on desired action
   switch (answers.desiredAction) {
     case "Sign up":
-      sections.push({ name: "Call to Action", priority: 9, tailarkComponent: "call-to-action", description: "Sign up form and benefits" });
+      sections.push({ name: "Call to Action", priority: 9, tailarkComponent: "call-to-action-1", description: "Sign up form and benefits" });
       break;
     case "Request a demo":
-      sections.push({ name: "Call to Action", priority: 9, tailarkComponent: "call-to-action", description: "Demo request form" });
+      sections.push({ name: "Call to Action", priority: 9, tailarkComponent: "call-to-action-1", description: "Demo request form" });
       break;
     case "Buy":
-      sections.push({ name: "Pricing", priority: 9, tailarkComponent: "pricing", description: "Product pricing and purchase options" });
+      sections.push({ name: "Pricing", priority: 9, tailarkComponent: "pricing-1", description: "Product pricing and purchase options" });
       break;
     case "Subscribe to newsletter":
-      sections.push({ name: "Call to Action", priority: 8, tailarkComponent: "call-to-action", description: "Newsletter signup form" });
+      sections.push({ name: "Call to Action", priority: 8, tailarkComponent: "call-to-action-1", description: "Newsletter signup form" });
       break;
     case "Contact you":
-      sections.push({ name: "Call to Action", priority: 8, tailarkComponent: "call-to-action", description: "Contact form and information" });
+      sections.push({ name: "Call to Action", priority: 8, tailarkComponent: "call-to-action-1", description: "Contact form and information" });
       break;
   }
   
@@ -289,7 +289,7 @@ function selectSectionsForLanding(answers: LandingAnswers): LandingSection[] {
   sections.push({
     name: "Footer",
     priority: 1,
-    tailarkComponent: "footer",
+    tailarkComponent: "footer-1",
     description: "Site footer with links and information"
   });
   
